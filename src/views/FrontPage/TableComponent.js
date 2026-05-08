@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Typography } from '@mui/material';
-import axios from 'axios';
+import { getPublicProjectsTable } from '@/shared/api/projectsApi';
 
 const TableComponent = () => {
   const [projects, setProjects] = useState([]);
@@ -17,7 +17,7 @@ const TableComponent = () => {
 
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('/ver-proyectos-tabla/');
+        const response = await getPublicProjectsTable();
         // tu filtro
         const extraIds = [
           '0191b2025562','0193d2025553','0191b2025547',

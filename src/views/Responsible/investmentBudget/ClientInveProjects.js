@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Typography, IconButton, Tooltip } from '@mui/material';
-import axios from 'axios';
+import { getInvestmentProjects } from '@/shared/api/investmentApi';
 import * as XLSX from 'xlsx'; 
 import { saveAs } from 'file-saver'; 
 import DownloadIcon from '@mui/icons-material/Download'; 
@@ -18,7 +18,7 @@ const ClientProjects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('cedulas/');
+        const response = await getInvestmentProjects();
         const data = response.data.map(project => {
           // Filtrar los anexos que pertenecen a este proyecto
           const anexos = urlAnexos.filter(anexo => anexo.projInvestment_id === project.projInvestment_id);

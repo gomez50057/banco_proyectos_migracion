@@ -6,8 +6,12 @@ import ClientProjects from '../projectRegistration/ClientProjects';
 import ClientInveProjects from '../investmentBudget/ClientInveProjects';
 import NavbarAntepro from '../../../components/NavbarAntepro';
 import LogoutConfirmationModal from '../../../components/LogoutModal';
+import { readStorageValue, writeStorageValue } from '@/shared/storage/browserStorage';
 
 const imgBasePath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/";
+const DEFAULT_COMPONENT = 'ProjInvestment';
+const STORAGE_KEY = 'clientActiveComponent';
+const VALID_COMPONENTS = [DEFAULT_COMPONENT, 'formulario'];
 
 const Dashboard = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -21,12 +25,11 @@ const Dashboard = () => {
   };
 
   const [activeComponent, setActiveComponent] = useState(() => {
-    if (typeof window === 'undefined') return 'ProjInvestment';
-    return localStorage.getItem('activeComponent') || 'ProjInvestment';
+    return readStorageValue(STORAGE_KEY, DEFAULT_COMPONENT, VALID_COMPONENTS);
   });
 
   useEffect(() => {
-    localStorage.setItem('activeComponent', activeComponent);
+    writeStorageValue(STORAGE_KEY, activeComponent);
 
     const listItems = document.querySelectorAll('.list-item');
 
@@ -55,7 +58,7 @@ const Dashboard = () => {
 
   const handleMenuClick = (componentName) => {
     setActiveComponent(componentName);
-    localStorage.setItem('activeComponent', componentName);
+    writeStorageValue(STORAGE_KEY, componentName);
 
     const listItems = document.querySelectorAll('.list-item');
     listItems.forEach((li) => li.classList.remove('active'));

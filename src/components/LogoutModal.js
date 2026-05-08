@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import axios from 'axios';
+import { logout } from '@/shared/api/authApi';
 import styles from './LogoutModal.module.css';
 
 const LogoutModal = ({ isOpen, onClose }) => {
@@ -9,7 +9,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('/api/logout/');
+      await logout();
       window.location.href = '/login'; // Redirige al login después de cerrar sesión
     } catch (error) {
       console.error('Error al cerrar sesión:', error);

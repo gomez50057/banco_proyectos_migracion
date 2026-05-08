@@ -9,9 +9,9 @@ import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import ErrorIcon from '@mui/icons-material/Error';
 import TooltipHelp from '../componentsForm/TooltipHelp';
 import DocumentUploadSection from '../componentsForm/DocumentUploadSection';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import ProjectCreationModal from '../componentsForm/ProjectCreationModal';
+import { getInvestmentProject, updateInvestmentProject } from '@/shared/api/investmentApi';
 import {
   dependencias,
   organismos,
@@ -78,7 +78,7 @@ const EditProjectInvest = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const response = await axios.get(`/cedulas/${projectId}/`);
+        const response = await getInvestmentProject(projectId);
 
         // Asegúrate de que los valores iniciales para los select coincidan con las opciones
         const initialData = {
@@ -176,7 +176,7 @@ const EditProjectInvest = () => {
     const csrfToken = Cookies.get('csrftoken');
 
     try {
-      const response = await axios.put(`/cedulas/${projectId}/`, values, {
+      const response = await updateInvestmentProject(projectId, values, {
         headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': csrfToken

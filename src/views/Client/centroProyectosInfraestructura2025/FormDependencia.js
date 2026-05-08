@@ -6,9 +6,9 @@ import Formulario from './FormQuestions';
 import validationSchemaStep from './validationSchemaStep';
 import ProjectCreationModal from '../componentsForm/ProjectCreationModal';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { fieldLabels } from '../../../utils';
 import ErrorIcon from '@mui/icons-material/Error';
+import { createInfrastructureProject, uploadInfrastructureProjectDocument } from '@/shared/api/infrastructureApi';
 
 const FormDependencia = () => {
   const fechaHoy = new Date().toISOString().split('T')[0];
@@ -28,7 +28,7 @@ const FormDependencia = () => {
       console.log('Token CSRF:', csrfToken);
 
       // Enviar la información del proyecto (sin archivos) al endpoint principal.
-      const response = await axios.post('api/b/create-project/', values, {
+      const response = await createInfrastructureProject(values, {
         headers: {
           'X-CSRFToken': csrfToken,
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ const FormDependencia = () => {
             formData.append('file', file);
             
             // Realizar la petición de subida
-            await axios.post(`/api/b/projects/${projectId}/upload-document/`, formData, {
+            await uploadInfrastructureProjectDocument(projectId, formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
                 'X-CSRFToken': csrfToken,

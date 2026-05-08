@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import axios from 'axios';
 import { fieldLabels } from '../../../utils';
+import { createProject, updateProject } from '@/shared/api/projectsApi';
 
 // Componente memoizado para cada input
 const InputField = React.memo(({
@@ -112,10 +112,10 @@ const ProjectDialog = ({ open, onClose, project, onChange, onSubmit, isEditMode 
   const handleSubmit = async () => {
     try {
       if (isEditMode) {
-        await axios.put(`/proyecto/${project.project_id}/`, project);
+        await updateProject(project.project_id, project);
         setNotification({ type: 'success', text: 'Proyecto actualizado exitosamente' });
       } else {
-        await axios.post('/proyecto/', project);
+        await createProject(project);
         setNotification({ type: 'success', text: 'Proyecto agregado exitosamente' });
       }
       // Se espera 3 segundos para mostrar el mensaje antes de ejecutar onSubmit (posible cierre o actualización)

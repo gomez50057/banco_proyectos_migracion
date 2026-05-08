@@ -8,10 +8,11 @@ import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import ErrorIcon from '@mui/icons-material/Error';
 import TooltipHelp from '../componentsForm/TooltipHelp';
 import DocumentUploadSection from '../componentsForm/DocumentUploadSection';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import ProjectCreationModal from '../componentsForm/ProjectCreationModal';
 import Preloader from '../../../components/Preloader';
+import { getCsrfToken as requestCsrfToken } from '@/shared/api/authApi';
+import { createInvestmentProject } from '@/shared/api/investmentApi';
 
 import {
   dependencias,
@@ -41,7 +42,7 @@ const handleNumericInput = (fieldName, setFieldValue) => (e) => {
 // Función para refrescar el token CSRF cada 5 minutos
 const refreshCsrfToken = async () => {
   try {
-    const response = await axios.get('/api/csrf-token/'); // Asegúrate de que esta ruta coincide con tu backend
+    const response = await requestCsrfToken(); // Asegúrate de que esta ruta coincide con tu backend
     const newCsrfToken = response.data.csrfToken;
     Cookies.set('csrftoken', newCsrfToken);
     // console.log('Token CSRF refrescado:', newCsrfToken);
@@ -172,7 +173,7 @@ const CedulaRegistroForm = () => {
     const csrfToken = Cookies.get('csrftoken');
 
     try {
-      const response = await axios.post('cedulas/', formData, {
+      const response = await createInvestmentProject(formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'X-CSRFToken': csrfToken,

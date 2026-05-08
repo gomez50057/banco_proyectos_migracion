@@ -2,10 +2,10 @@
 
 // Archivo: src/pages/Responsible/ProjectReportReact.js
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import { getProject } from '@/shared/api/projectsApi';
 const imgBasePath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/pdf/";
 const img_banco = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/";
 
@@ -25,7 +25,7 @@ const ProjectReportReact = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await axios.get(`/proyecto/${projectId}/`);
+        const response = await getProject(projectId);
         setProject(response.data);
       } catch (error) {
         console.error('Error fetching project:', error);

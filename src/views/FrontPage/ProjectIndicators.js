@@ -2,7 +2,7 @@
 
 // src/components/ProjectIndicators/ProjectIndicators.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import { getProjects } from '@/shared/api/projectsApi';
 import styles from './ProjectIndicators.module.css';
 
 const imgTotalPath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/estrella.webp";
@@ -32,7 +32,7 @@ const ProjectIndicators = () => {
 
     const fetchAndAnimate = async () => {
       try {
-        const { data: projects } = await axios.get('/proyecto/');
+        const { data: projects } = await getProjects();
         const finalCount = Array.isArray(projects) ? projects.length : 0;
         let counter = 0;
         const fastInterval = 5;    // intervalo rápido en ms

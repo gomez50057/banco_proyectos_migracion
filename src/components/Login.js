@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from '../config/axiosConfig';
+import { getCurrentUser, login } from '@/shared/api/authApi';
 import styles from './Login.module.css';
 
 const imgBasePath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/";
@@ -33,7 +33,7 @@ const Login = () => {
       try {
         setChecking(true);
         setError(null);
-        const res = await axios.get('/api/current_user/');
+        const res = await getCurrentUser();
         if (!active) return;
         if (res?.data?.status === 'ok' && res?.data?.group) {
           redirectByGroup(res.data.group);
@@ -56,7 +56,7 @@ const Login = () => {
     setError(null);
     setSubmitting(true);
     try {
-      const response = await axios.post('/inicio-sesion/', { username, password });
+      const response = await login({ username, password });
       if (response?.data?.status === 'ok') {
         const { group } = response.data;
         group ? redirectByGroup(group) : setError('Grupo de usuario no enviado por el servidor.');

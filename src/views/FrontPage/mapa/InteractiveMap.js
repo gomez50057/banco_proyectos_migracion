@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet.markercluster';
-import axios from 'axios';
+import { getProjects } from '@/shared/api/projectsApi';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { municipios_proyectos } from './municipios';
@@ -91,7 +91,7 @@ const InteractiveMap = () => {
         // Obtener los datos de los proyectos
         const fetchData = async () => {
             try {
-                const response = await axios.get('/proyecto/');
+                const response = await getProjects();
                 // const filteredProjects = response.data.filter(project => project.estatus === 'Atendido');
                 const extraIds = [
                     '0191b2025562',

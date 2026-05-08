@@ -2,7 +2,7 @@
 
 // AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import axios from '../config/axiosConfig';
+import { getCurrentUser } from '@/shared/api/authApi';
 
 const AuthContext = createContext();
 
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get('/api/current_user/');
+                const response = await getCurrentUser();
                 setUser(response.data);
                 setIsAuthenticated(true);
             } catch (error) {

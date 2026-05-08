@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import Select from 'react-select';
 import { useParams, useRouter } from 'next/navigation';
+import { getProject, updateProjectFormData } from '@/shared/api/projectsApi';
 import CustomTooltip from '../componentsForm/Tooltip';
 import SectionTitle from '../componentsForm/SectionTitle';
 import { municipiosDeHidalgo, unidadesResponsables, dependencias, organismos, ramoPresupuestalOptions, municipiosPorRegion, unidadPresupuestalPorUnidadResponsable, programaPresupuestarioOptions, indicadoresEstrategicosOptions, aplicaOptions, sectorOptions, tipoProyectoOptions, programasSectorialesOptions, modalidadEjecucionOptions, tipoLocalidadOptions, planNacionalOptions, acuerdosTransversalesOptions, odsOptions } from '../../../utils';
@@ -101,7 +101,7 @@ const EditProject = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await axios.get(`/proyecto/${projectId}/`);
+        const response = await getProject(projectId);
         setProject({
           ...response.data,
           estudios_factibilidad: [],
@@ -431,7 +431,7 @@ const EditProject = () => {
               formData.append('retroalimentacion', values.retroalimentacion);
 
               const csrfToken = Cookies.get('csrftoken');
-              await axios.put(`/update-project/${projectId}/`, formData, {
+              await updateProjectFormData(projectId, formData, {
                 headers: { 'X-CSRFToken': csrfToken }
               });              
 

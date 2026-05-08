@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Typography, Tooltip } from '@mui/material';  // Importar Tooltip
-import axios from 'axios';
+import { getUserProjectsTable } from '@/shared/api/projectsApi';
 import { useRouter } from 'next/navigation';
 
 const ClientProjects = () => {
@@ -15,7 +15,7 @@ const ClientProjects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('/ver-proyectos-usuario/');
+        const response = await getUserProjectsTable();
         const data = response.data.map(project => [
           project.project_id,
           project.nombre_proyecto,

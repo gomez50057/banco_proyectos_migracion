@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'next/navigation';
+import { getInvestmentProject } from '@/shared/api/investmentApi';
 
 const imgBasePath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/pdf/";
 const imgLogos = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/pdf/logos/";
@@ -17,7 +17,7 @@ const ProjectReportReact = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await axios.get(`/cedulas/${projectId}/`);
+        const response = await getInvestmentProject(projectId);
         setProject(response.data);
         setLoading(false);
       } catch (error) {

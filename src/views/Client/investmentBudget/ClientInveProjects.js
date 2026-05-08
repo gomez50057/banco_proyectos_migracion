@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Typography, Tooltip } from '@mui/material';
-import axios from 'axios';
+import { getInvestmentProjects } from '@/shared/api/investmentApi';
 import { useRouter } from 'next/navigation';
 
 const ClientProjects = () => {
@@ -15,7 +15,7 @@ const ClientProjects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('cedulas/');
+        const response = await getInvestmentProjects();
         const data = response.data.map(project => [
           project.projInvestment_id,
           project.fecha_registro,

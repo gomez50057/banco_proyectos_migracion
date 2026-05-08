@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
+import { getCurrentUser } from '@/shared/api/authApi';
 import UserOptionsModal from './UserOptionsModal';
 import styles from './NavbarLogin.module.css';
 
@@ -24,7 +24,7 @@ const NavbarLogin = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get('/api/current_user/');
+        const { data } = await getCurrentUser();
         if (data?.username) setUsername(data.username);
       } catch (err) {
         console.error('Error fetching username:', err);

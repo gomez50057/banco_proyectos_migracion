@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Bar, Pie, Doughnut } from 'react-chartjs-2';
-import axios from 'axios';
+import { getDashboardInvestmentData } from '@/shared/api/dashboardApi';
 import styles from './DashboardInvestment.module.css';
 import 'chart.js/auto';
 
@@ -14,25 +14,17 @@ const DashboardInvestment = () => {
   const [coberturaProyecto, setCoberturaProyecto] = useState([]);
 
   useEffect(() => {
-    // Proyectos por unidad responsable
-    axios.get('/api/proyectos_por_unidad_responsable/')
-      .then(response => setProyectosPorUnidad(response.data));
-
-    // Proyectos por usuario
-    axios.get('/api/proyectos_por_usuario/')
-      .then(response => setProyectosPorUsuario(response.data));
-
-    // Propuesta campaña (Sí/No)
-    axios.get('/api/propuesta_campana/')
-      .then(response => setPropuestaCampana(response.data));
-
-    // Cual propuesta
-    axios.get('/api/cual_propuesta/')
-      .then(response => setCualPropuesta(response.data));
-
-    // Cobertura del proyecto
-    axios.get('/api/cobertura_proyecto/')
-      .then(response => setCoberturaProyecto(response.data));
+    getDashboardInvestmentData()
+      .then((data) => {
+        setProyectosPorUnidad(data.projectsByResponsibleUnit);
+        setProyectosPorUsuario(data.projectsByUser);
+        setPropuestaCampana(data.campaignProposal);
+        setCualPropuesta(data.proposalDetail);
+        setCoberturaProyecto(data.projectCoverage);
+      })
+      .catch((error) => {
+        console.error('Error fetching dashboard data:', error);
+      });
   }, []);
 
   // Calcular el total de proyectos sumando los proyectos por unidad responsable

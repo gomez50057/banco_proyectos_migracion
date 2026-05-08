@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
+import { getCurrentUser } from '@/shared/api/authApi';
 import UserOptionsModal from './UserOptionsModal'; // Asegúrate de importar el modal
 
 const img = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img/";
@@ -18,7 +18,7 @@ const NavbarAntepro = () => {
   useEffect(() => {
     const fetchUsername = async () => {
       try {
-        const response = await axios.get('/api/current_user/');
+        const response = await getCurrentUser();
         setUsername(response.data.username);
       } catch (error) {
         console.error('Error fetching username:', error);

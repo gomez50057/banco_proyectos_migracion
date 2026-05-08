@@ -5,11 +5,12 @@ import SvgIcon from '../../../components/SvgIcon';
 import CRUDTable from '../../Responsible/projectRegistration/CRUDTable';
 import NavbarAntepro from '../../../components/NavbarAntepro';
 import LogoutConfirmationModal from '../../../components/LogoutModal';
+import { readStorageValue, writeStorageValue } from '@/shared/storage/browserStorage';
 
 const imgBasePath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/";
 const DEFAULT_COMPONENT = 'CRUDTable';
 const STORAGE_KEY = 'responsibleActiveComponent';
-const VALID_COMPONENTS = new Set([DEFAULT_COMPONENT]);
+const VALID_COMPONENTS = [DEFAULT_COMPONENT];
 
 const DashboardResponsible = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -23,14 +24,11 @@ const DashboardResponsible = () => {
   };
 
   const [activeComponent, setActiveComponent] = useState(() => {
-    if (typeof window === 'undefined') return DEFAULT_COMPONENT;
-
-    const savedComponent = localStorage.getItem(STORAGE_KEY);
-    return VALID_COMPONENTS.has(savedComponent) ? savedComponent : DEFAULT_COMPONENT;
+    return readStorageValue(STORAGE_KEY, DEFAULT_COMPONENT, VALID_COMPONENTS);
   });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, activeComponent);
+    writeStorageValue(STORAGE_KEY, activeComponent);
 
     const listItems = document.querySelectorAll('.list-item');
 
@@ -59,7 +57,7 @@ const DashboardResponsible = () => {
 
   const handleMenuClick = (componentName) => {
     setActiveComponent(componentName);
-    localStorage.setItem(STORAGE_KEY, componentName);
+    writeStorageValue(STORAGE_KEY, componentName);
 
     const listItems = document.querySelectorAll('.list-item');
     listItems.forEach((li) => li.classList.remove('active'));
@@ -84,18 +82,6 @@ const DashboardResponsible = () => {
       <div className="sidebar active">
         <div className="toggle active"></div>
         <ul className="list">
-          {/* <li
-            className={`list-item ${activeComponent === 'ClientInveProjectsAdmin' ? 'active' : ''}`}
-            data-component="ClientInveProjectsAdmin"
-            onClick={() => handleMenuClick('ClientInveProjectsAdmin')}
-          >
-            <button className="list-item-link">
-              <div className="icon">
-                <SvgIcon name="acuerdo" />
-              </div>
-              <span className="title">Proyectos de Inversión Admin</span>
-            </button>
-          </li> */}
           <li
             className={`list-item ${activeComponent === 'CRUDTable' ? 'active' : ''}`}
             data-component="CRUDTable"

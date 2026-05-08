@@ -2,7 +2,6 @@
 
 // Archivo: src/pages/Responsible/CRUDTable.js
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -12,6 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Typography } from '@mui/material';
 import { getCsrfToken } from '../../../utils';
 import ProjectDialog from './ProjectDialog';
+import { createProject, getAdminProjectsTable, updateProject } from '@/shared/api/projectsApi';
 //para el handleViewReactReport
 // import { useRouter } from 'next/navigation';
 
@@ -26,7 +26,7 @@ const CRUDTable = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('/ver-proyectos-tabla-admin/');
+        const response = await getAdminProjectsTable();
         setProjects(response.data);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -56,19 +56,19 @@ const CRUDTable = () => {
     const csrfToken = getCsrfToken();
     try {
       if (isEditMode) {
-        await axios.put(`/proyecto/${currentProject.project_id}/`, currentProject, {
+        await updateProject(currentProject.project_id, currentProject, {
           headers: {
             'X-CSRFToken': csrfToken,
           },
         });
       } else {
-        await axios.post('/proyecto/', currentProject, {
+        await createProject(currentProject, {
           headers: {
             'X-CSRFToken': csrfToken,
           },
         });
       }
-      const response = await axios.get('/ver-proyectos-tabla-admin/');
+      const response = await getAdminProjectsTable();
       setProjects(response.data);
       handleClose();
     } catch (error) {
