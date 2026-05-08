@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import SvgIcon from '../../../components/SvgIcon';
-import ClientInveProjectsAdmin from '../../Responsible/investmentBudget/ClientInveProjects';
 import CRUDTable from '../../Responsible/projectRegistration/CRUDTable';
 import NavbarAntepro from '../../../components/NavbarAntepro';
 import LogoutConfirmationModal from '../../../components/LogoutModal';
 
 const imgBasePath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/";
+const DEFAULT_COMPONENT = 'CRUDTable';
+const STORAGE_KEY = 'responsibleActiveComponent';
+const VALID_COMPONENTS = new Set([DEFAULT_COMPONENT]);
 
 const DashboardResponsible = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -21,12 +23,14 @@ const DashboardResponsible = () => {
   };
 
   const [activeComponent, setActiveComponent] = useState(() => {
-    if (typeof window === 'undefined') return 'ClientInveProjectsAdmin';
-    return localStorage.getItem('activeComponent') || 'ClientInveProjectsAdmin';
+    if (typeof window === 'undefined') return DEFAULT_COMPONENT;
+
+    const savedComponent = localStorage.getItem(STORAGE_KEY);
+    return VALID_COMPONENTS.has(savedComponent) ? savedComponent : DEFAULT_COMPONENT;
   });
 
   useEffect(() => {
-    localStorage.setItem('activeComponent', activeComponent);
+    localStorage.setItem(STORAGE_KEY, activeComponent);
 
     const listItems = document.querySelectorAll('.list-item');
 
@@ -55,7 +59,7 @@ const DashboardResponsible = () => {
 
   const handleMenuClick = (componentName) => {
     setActiveComponent(componentName);
-    localStorage.setItem('activeComponent', componentName);
+    localStorage.setItem(STORAGE_KEY, componentName);
 
     const listItems = document.querySelectorAll('.list-item');
     listItems.forEach((li) => li.classList.remove('active'));
@@ -68,12 +72,10 @@ const DashboardResponsible = () => {
 
   const renderContent = () => {
     switch (activeComponent) {
-      case 'ClientInveProjectsAdmin':
-        return <ClientInveProjectsAdmin />;
       case 'CRUDTable':
         return <CRUDTable />;
       default:
-        return null;
+        return <CRUDTable />;
     }
   };
 
