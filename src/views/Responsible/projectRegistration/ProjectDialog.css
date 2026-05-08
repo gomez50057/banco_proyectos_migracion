@@ -1,30 +1,12 @@
 /* Estilos del modal */
-.dialog-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.dialog-overlay .dialog {
+.dialog {
     background: var(--blanco);
-    border-radius: 40px;
-    width: 90vw;
-    max-width: 90vw;
-    height: 90vh;
-    max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     animation: fadeIn 0.3s;
 }
 
-.dialog-overlay .dialog-title {
+.dialog-title {
     background: var(--blanco);
     padding: 15px;
     border-bottom: 1px solid #ddd;
@@ -33,28 +15,28 @@
     border-radius: 10px 10px 0 0;
 }
 
-.dialog-overlay .dialog-content {
+.dialog-content {
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.dialog-overlay .dialog-row {
+.dialog-row {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-.dialog-overlay .dialog-input-container,
-.dialog-overlay .dialog-select-container {
+.dialog-input-container,
+.dialog-select-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.dialog-overlay .dialog-input {
+.dialog-input {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 15px;
@@ -62,26 +44,26 @@
     width: 100%;
 }
 
-.dialog-overlay .dialog-select {
+.dialog-select {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
 }
 
-.dialog-overlay .dialog-label {
+.dialog-label {
     font-size: 16px;
     text-transform: capitalize;
 }
 
-.dialog-overlay .dialog-actions {
+.dialog-actions {
     display: flex;
     justify-content: flex-end;
     padding: 10px 20px;
     border-top: 1px solid #ddd;
 }
 
-.dialog-overlay .toggle-text {
+.toggle-text {
     display: inline-block;
     color: var(--vinoOsc);
     cursor: pointer;
@@ -91,12 +73,12 @@
     transition: color 0.6s ease;
 }
 
-.dialog-overlay .toggle-text:hover {
+.toggle-text:hover {
     color: var(--vinoClr);
     font-weight: 700;
 }
 
-.dialog-overlay .dialog-button {
+.dialog-button {
     background: var(--vinoOsc);
     color: var(--blanco);
     border: none;
@@ -106,23 +88,23 @@
     border-radius: 5px;
 }
 
-.dialog-overlay .dialog-button:hover {
+.dialog-button:hover {
     background: #A02142;
 }
 
-.dialog-overlay .input-actions-container {
+.input-actions-container {
     display: flex;
     flex-direction: column;
 }
 
-.dialog-overlay .input-actions {
+.input-actions {
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: flex-end;
 }
 
-.dialog-overlay .dialog-observation-container {
+.dialog-observation-container {
     margin-top: 10px;
 }
 

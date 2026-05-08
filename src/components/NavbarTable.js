@@ -84,13 +84,13 @@ const Navbar = () => {
 
         <ul className={`${styles.navOptions} ${menuOpen ? styles.open : ''}`}>
           <li className={styles.navItem}>
-            <a
+            <Link
               href="/"
               onClick={handleMapClick}
               className={styles.navLink}
             >
               Inicio
-            </a>
+            </Link>
           </li>
           <li className={styles.navItem}>
             <Link href="/login" className={styles.buttonAcceder}>

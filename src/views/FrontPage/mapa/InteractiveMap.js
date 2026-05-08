@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import { getProjects } from '@/shared/api/projectsApi';
+import { normalizeArrayResponse } from '@/shared/utils/normalizeApiResponse';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { municipios_proyectos } from './municipios';
@@ -92,7 +93,7 @@ const InteractiveMap = () => {
         const fetchData = async () => {
             try {
                 const response = await getProjects();
-                // const filteredProjects = response.data.filter(project => project.estatus === 'Atendido');
+                const projectRows = normalizeArrayResponse(response.data);
                 const extraIds = [
                     '0191b2025562',
                     '0193d2025553',
@@ -106,9 +107,9 @@ const InteractiveMap = () => {
                     '0191b2025469'
                 ];
 
-                const filteredProjects = response.data.filter(
+                const filteredProjects = projectRows.filter(
                     project =>
-                        extraIds.includes(project.project_id.toString())
+                        extraIds.includes(project.project_id?.toString())
                 );
                 setProjects(filteredProjects);
                 if (filteredProjects.length === 0) {

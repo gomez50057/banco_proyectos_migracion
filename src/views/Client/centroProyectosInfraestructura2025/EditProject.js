@@ -11,58 +11,14 @@ import SectionTitle from '../componentsForm/SectionTitle';
 import { municipiosDeHidalgo, unidadesResponsables, dependencias, organismos, ramoPresupuestalOptions, municipiosPorRegion, unidadPresupuestalPorUnidadResponsable, programaPresupuestarioOptions, indicadoresEstrategicosOptions, aplicaOptions, sectorOptions, tipoProyectoOptions, programasSectorialesOptions, modalidadEjecucionOptions, tipoLocalidadOptions, planNacionalOptions, acuerdosTransversalesOptions, odsOptions } from '../../../utils';
 import { fieldLabels } from '../../../utils';
 
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import Modal from 'react-modal';
-
 import DocumentUploadSection from '../componentsForm/DocumentUploadSection';
 import TooltipHelp from '../componentsForm/TooltipHelp';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import ErrorIcon from '@mui/icons-material/Error';
 
 
 const imgBasePath = "https://bibliotecadigitaluplaph.hidalgo.gob.mx/img_banco/";
-
-const StyledModal = styled(Modal)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-  border-radius: 35px;
-  backdrop-filter: blur(3px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  h2 {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    &:hover {
-      background: #0056b3;
-    }
-  }
-`;
-
-const globalModalStyles = css`
-  .ReactModal__Overlay {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-  }
-`;
 
 const calculateTotalInvestment = (federal, estatal, municipal, otros) => {
   return (
@@ -1089,17 +1045,13 @@ const EditProject = () => {
         </Formik>
       )}
 
-      <StyledModal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        shouldCloseOnOverlayClick={false}
-        shouldCloseOnEsc={false}
-        contentLabel="Proyecto Actualizado"
-        css={globalModalStyles}
-      >
-        <h2>Proyecto actualizado exitosamente</h2>
-        <button onClick={closeModal}>He finalizado</button>
-      </StyledModal>
+      <Dialog open={modalIsOpen} onClose={() => {}} disableEscapeKeyDown maxWidth="sm" fullWidth>
+        <DialogTitle>Proyecto actualizado exitosamente</DialogTitle>
+        <DialogContent />
+        <DialogActions>
+          <Button onClick={closeModal} variant="contained">He finalizado</Button>
+        </DialogActions>
+      </Dialog>
     </div >
   );
 };

@@ -1,6 +1,16 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { fieldLabels } from '../../../utils';
 import { createProject, updateProject } from '@/shared/api/projectsApi';
 
@@ -199,134 +209,141 @@ const ProjectDialog = ({ open, onClose, project, onChange, onSubmit, isEditMode 
     </div>
   );
 
-  // Si no está abierto, no se renderiza nada (esto se hace después de los hooks)
-  if (!open) return null;
-
   return (
-    <div className="dialog-overlay">
-      <div className="dialog">
-        <div className="dialog-header">
-          <div className="dialog-title">
-            {isEditMode ? 'Editar Proyecto' : 'Agregar Proyecto'}
-          </div>
-          <button className="dialog-close-button" onClick={onClose}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="xl"
+      PaperProps={{
+        className: 'dialog',
+        sx: {
+          borderRadius: 4,
+          height: '90vh',
+          maxHeight: '90vh',
+          maxWidth: '90vw',
+          width: '90vw',
+        },
+      }}
+    >
+      <DialogTitle className="dialog-header">
+        <span className="dialog-title">
+          {isEditMode ? 'Editar Proyecto' : 'Agregar Proyecto'}
+        </span>
+        <IconButton aria-label="Cerrar" className="dialog-close-button" onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent className="dialog-content" dividers>
         {notification && (
-          <div className={`notification ${notification.type}`}>
+          <Alert severity={notification.type} sx={{ mb: 2 }}>
             {notification.text}
-          </div>
+          </Alert>
         )}
-        <div className="dialog-content">
-          <div className="dialog-checkbox-container">
-            <label className="dialog-label">Habilitar actualización al usuario</label>
-            <input
-              type="checkbox"
-              checked={!project.isBlocked_project}
-              onChange={handleIsBlockedChange}
-            />
-          </div>
-          <div className="dialog-row">
-            {renderInputField('project_id')}
-            {renderInputField('fecha_registro')}
-          </div>
-          {renderInputField('nombre_proyecto')}
-          <div className="dialog-row">
-            {renderInputField('tipo_entidad')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('dependencia')}
-            {renderInputField('organismo')}
-            {renderInputField('municipio_ayuntamiento')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('region')}
-            {renderInputField('municipio')}
-            {renderInputField('localidad')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('barrio_colonia')}
-            {renderInputField('tipo_localidad')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('latitud')}
-            {renderInputField('longitud')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('sector')}
-            {renderInputField('tipo_proyecto')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('unidad_responsable')}
-            {renderInputField('unidad_presupuestal')}
-            {renderInputField('ramo_presupuestal')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('inversion_federal')}
-            {renderInputField('inversion_estatal')}
-            {renderInputField('inversion_municipal')}
-            {renderInputField('inversion_otros')}
-          </div>
-          {renderInputField('inversion_total')}
-          {renderInputField('descripcion')}
-          {renderInputField('situacion_sin_proyecto')}
-          <div className="dialog-row">
-            {renderInputField('objetivos')}
-            {renderInputField('metas')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('tiempo_ejecucion')}
-            {renderInputField('modalidad_ejecucion')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('beneficiarios')}
-            {renderInputField('gasto_programable')}
-            {renderInputField('programa_presupuestario')}
-          </div>
-          {renderInputField('normativa_aplicable')}
-          <div className="dialog-row">
-            {renderInputField('plan_nacional')}
-            {renderInputField('plan_estatal')}
-            {renderInputField('plan_municipal')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('ods')}
-            {renderInputField('acuerdos_transversales')}
-            {renderInputField('programas_SIE')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('indicadores_estrategicos')}
-            {renderInputField('indicadores_socioeconomicos')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('area_adscripcion')}
-            {renderInputField('nombre_registrante')}
-            {renderInputField('apellido_paterno')}
-            {renderInputField('apellido_materno')}
-          </div>
-          <div className="dialog-row">
-            {renderInputField('correo')}
-            {renderInputField('telefono')}
-            {renderInputField('telefono_ext')}
-          </div>
-          {renderInputField('observaciones')}
-          {renderInputField('porcentaje_avance')}
-          {renderSelectField('estatus', ['Atendido', 'En Proceso', 'Registrado'])}
-          {renderSelectField('situacion', ['Vigente', 'Antecedente', 'Cancelado'])}
-          {renderInputField('retroalimentacion')}
+        <div className="dialog-checkbox-container">
+          <label className="dialog-label">Habilitar actualización al usuario</label>
+          <input
+            type="checkbox"
+            checked={!project.isBlocked_project}
+            onChange={handleIsBlockedChange}
+          />
         </div>
-        <div className="dialog-actions">
-          <button className="dialog-button" onClick={onClose}>Cancelar</button>
-          <button className="dialog-button" onClick={handleSubmit}>
-            {isEditMode ? 'Actualizar' : 'Agregar'}
-          </button>
+        <div className="dialog-row">
+          {renderInputField('project_id')}
+          {renderInputField('fecha_registro')}
         </div>
-      </div>
-    </div>
+        {renderInputField('nombre_proyecto')}
+        <div className="dialog-row">
+          {renderInputField('tipo_entidad')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('dependencia')}
+          {renderInputField('organismo')}
+          {renderInputField('municipio_ayuntamiento')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('region')}
+          {renderInputField('municipio')}
+          {renderInputField('localidad')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('barrio_colonia')}
+          {renderInputField('tipo_localidad')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('latitud')}
+          {renderInputField('longitud')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('sector')}
+          {renderInputField('tipo_proyecto')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('unidad_responsable')}
+          {renderInputField('unidad_presupuestal')}
+          {renderInputField('ramo_presupuestal')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('inversion_federal')}
+          {renderInputField('inversion_estatal')}
+          {renderInputField('inversion_municipal')}
+          {renderInputField('inversion_otros')}
+        </div>
+        {renderInputField('inversion_total')}
+        {renderInputField('descripcion')}
+        {renderInputField('situacion_sin_proyecto')}
+        <div className="dialog-row">
+          {renderInputField('objetivos')}
+          {renderInputField('metas')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('tiempo_ejecucion')}
+          {renderInputField('modalidad_ejecucion')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('beneficiarios')}
+          {renderInputField('gasto_programable')}
+          {renderInputField('programa_presupuestario')}
+        </div>
+        {renderInputField('normativa_aplicable')}
+        <div className="dialog-row">
+          {renderInputField('plan_nacional')}
+          {renderInputField('plan_estatal')}
+          {renderInputField('plan_municipal')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('ods')}
+          {renderInputField('acuerdos_transversales')}
+          {renderInputField('programas_SIE')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('indicadores_estrategicos')}
+          {renderInputField('indicadores_socioeconomicos')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('area_adscripcion')}
+          {renderInputField('nombre_registrante')}
+          {renderInputField('apellido_paterno')}
+          {renderInputField('apellido_materno')}
+        </div>
+        <div className="dialog-row">
+          {renderInputField('correo')}
+          {renderInputField('telefono')}
+          {renderInputField('telefono_ext')}
+        </div>
+        {renderInputField('observaciones')}
+        {renderInputField('porcentaje_avance')}
+        {renderSelectField('estatus', ['Atendido', 'En Proceso', 'Registrado'])}
+        {renderSelectField('situacion', ['Vigente', 'Antecedente', 'Cancelado'])}
+        {renderInputField('retroalimentacion')}
+      </DialogContent>
+      <DialogActions className="dialog-actions">
+        <Button className="dialog-button" onClick={onClose}>Cancelar</Button>
+        <Button className="dialog-button" onClick={handleSubmit} variant="contained">
+          {isEditMode ? 'Actualizar' : 'Agregar'}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

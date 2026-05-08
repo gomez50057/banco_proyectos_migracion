@@ -1,10 +1,49 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import MUIDataTable from 'mui-datatables';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import ProjectDataGrid, { renderTextCell } from '@/shared/components/ProjectDataGrid';
 import { getPublicProjectsTable } from '@/shared/api/projectsApi';
+import { normalizeArrayResponse, sortByNewest } from '@/shared/utils/normalizeApiResponse';
+
+const columns = [
+  {
+    field: 'nombre_proyecto',
+    headerName: 'Nombre del Proyecto',
+    flex: 1.3,
+    minWidth: 240,
+    renderCell: renderTextCell,
+  },
+  {
+    field: 'descripcion',
+    headerName: 'Descripción',
+    flex: 1.8,
+    minWidth: 320,
+    renderCell: renderTextCell,
+  },
+  {
+    field: 'tipo_proyecto',
+    headerName: 'Tipo de Proyecto',
+    flex: 1,
+    minWidth: 170,
+    renderCell: renderTextCell,
+  },
+  {
+    field: 'municipio',
+    headerName: 'Municipio',
+    flex: 0.9,
+    minWidth: 160,
+    renderCell: renderTextCell,
+  },
+  {
+    field: 'beneficiarios',
+    headerName: 'Beneficiarios',
+    flex: 0.8,
+    minWidth: 140,
+    align: 'center',
+    headerAlign: 'center',
+    renderCell: renderTextCell,
+  },
+];
 
 const TableComponent = () => {
   const [projects, setProjects] = useState([]);
@@ -12,30 +51,37 @@ const TableComponent = () => {
   const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
-    // Empieza temporizador de 10s
     const timer = setTimeout(() => setTimedOut(true), 10_000);
 
     const fetchProjects = async () => {
       try {
         const response = await getPublicProjectsTable();
-        // tu filtro
+        const projectRows = normalizeArrayResponse(response.data);
         const extraIds = [
-          '0191b2025562','0193d2025553','0191b2025547',
-          '0191b2025530','0191b2025512','0191b2025499',
-          '0191b2025490','0191b2025485','0191b2025478',
-          '0191b2025469'
+          '0191b2025562',
+          '0193d2025553',
+          '0191b2025547',
+          '0191b2025530',
+          '0191b2025512',
+          '0191b2025499',
+          '0191b2025490',
+          '0191b2025485',
+          '0191b2025478',
+          '0191b2025469',
         ];
-        const filteredData = response.data.filter(({ project_id }) =>
-          extraIds.includes(project_id.toString())
-        );
-        const data = filteredData.map(p => [
-          p.nombre_proyecto,
-          p.descripcion,
-          p.tipo_proyecto,
-          p.municipio,
-          p.beneficiarios
-        ]);
-        setProjects(data);
+        const filteredData = sortByNewest(projectRows.filter(({ project_id }) =>
+          extraIds.includes(project_id?.toString())
+        ));
+
+        setProjects(filteredData.map((project, index) => ({
+          id: project.project_id || index,
+          fecha_registro: project.fecha_registro || 'N/A',
+          nombre_proyecto: project.nombre_proyecto || 'N/A',
+          descripcion: project.descripcion || 'N/A',
+          tipo_proyecto: project.tipo_proyecto || 'N/A',
+          municipio: project.municipio || 'N/A',
+          beneficiarios: project.beneficiarios || 'N/A',
+        })));
       } catch (error) {
         console.error('Error fetching projects:', error);
       } finally {
@@ -48,146 +94,22 @@ const TableComponent = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Determina el texto de noMatch según el estado
-  let noMatchText;
-  if (loading && !timedOut) {
-    noMatchText = "Buscando registros...";
-  } else if (loading && timedOut) {
-    noMatchText = "No se encuentran registros, revisa tu conexión y actualiza la página";
-  } else {
-    noMatchText = "No se encontraron registros";
-  }
-
-  const columns = [
-    { name: "Nombre del Proyecto", options: { setCellProps: () => ({ style: { fontWeight: 700, textAlign: 'left' } }) } },
-    { name: "Descripción", options: { setCellProps: () => ({ style: { textAlign: 'justify' } }) } },
-    "Tipo de Proyecto",
-    { name: "Municipio", options: { setCellProps: () => ({ style: { textAlign: 'center' } }) } },
-    { name: "Beneficiarios", options: { setCellProps: () => ({ style: { textAlign: 'center' } }) } },
-  ];
-
-  const options = {
-    selectableRows: 'none',
-    download: false,
-    print: false,
-    textLabels: {
-      body: {
-        noMatch: noMatchText,
-        toolTip: "Ordenar",
-      },
-      pagination: {
-        next: "Siguiente",
-        previous: "Anterior",
-        rowsPerPage: "Filas por página:",
-        displayRows: "de",
-      },
-      toolbar: {
-        search: "Buscar",
-        viewColumns: "Ver columnas",
-        filterTable: "Filtrar tabla",
-      },
-      filter: {
-        all: "Todos",
-        title: "FILTROS",
-        reset: "REINICIAR",
-      },
-      viewColumns: {
-        title: "Mostrar columnas",
-        titleAria: "Mostrar/Ocultar columnas",
-      },
-      selectedRows: {
-        text: "fila(s) seleccionada(s)",
-        delete: "Eliminar",
-        deleteAria: "Eliminar filas seleccionadas",
-      },
-    },
-    setRowProps: (row, dataIndex) => ({
-      style: {
-        backgroundColor:
-          dataIndex % 2 === 0
-            ? 'rgba(255, 255, 255, 0.8)'
-            : 'rgba(240, 240, 240, 0.8)',
-        backdropFilter: 'blur(5px)',
-        margin: '5px 0',
-        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-        transition: 'all 0.3s ease',
-      },
-    }),
-  };
-
-  const getMuiTheme = () =>
-    createTheme({
-      components: {
-        MUIDataTableBodyCell: {
-          styleOverrides: {
-            root: {
-              padding: '8px 16px',
-            },
-          },
-        },
-        MUIDataTableHeadCell: {
-          styleOverrides: {
-            root: {
-              fontWeight: 600,
-              backgroundColor: 'none',
-              textAlign: 'center',
-            },
-          },
-        },
-        MUIDataTableToolbar: {
-          styleOverrides: {
-            root: {
-              marginBottom: '10px',
-            },
-          },
-        },
-        MUIDataTable: {
-          styleOverrides: {
-            root: { boxShadow: 'none' },
-            paper: {
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-              margin: '20px',
-              backgroundColor: 'rgba(255, 255, 255, 0.7)',
-              backdropFilter: 'blur(5px)',
-            },
-          },
-        },
-        MuiTableRow: {
-          styleOverrides: {
-            root: {
-              '&:hover': {
-                backgroundColor: 'rgba(230, 230, 230) !important',
-                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-              },
-            },
-          },
-        },
-        MuiTypography: {
-          styleOverrides: {
-            h3: {
-              fontWeight: 600,
-              fontSize: '2.25rem',
-              color: '#DEC9A3',
-              fontFamily: "Montserrat",
-              padding: '10px'
-            },
-          },
-        },
-      },
-    });
+  const noRowsLabel = loading && !timedOut
+    ? 'Buscando registros...'
+    : loading && timedOut
+      ? 'No se encuentran registros, revisa tu conexión y actualiza la página'
+      : 'No se encontraron registros';
 
   return (
-    <ThemeProvider theme={getMuiTheme()}>
-      <CssBaseline />
-      <div className="table_grid_pro_publica">
-        <MUIDataTable
-          title={<Typography variant="h3">Proyectos Registrados</Typography>}
-          data={projects}
-          columns={columns}
-          options={options}
-        />
-      </div>
-    </ThemeProvider>
+    <ProjectDataGrid
+      title="Proyectos Registrados"
+      rows={projects}
+      columns={columns}
+      loading={loading}
+      className="table_grid_pro_publica"
+      noRowsLabel={noRowsLabel}
+      pageSize={10}
+    />
   );
 };
 

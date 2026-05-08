@@ -31,36 +31,18 @@
   display: inline-block;
 }
 
-/* Estilos adicionales para celdas del encabezado */
-.tss-1akey0g-MUIDataTableHeadCell-data {
-  color: #691B32;
-  font-weight: 700;
-  text-transform: capitalize;
-  padding: 10px;
-  width: max-content;
-}
-
-.tss-bd2lw8-MUIDataTableHeadCell-sort .Active {
-  color: #bc955b;
-}
-
-.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation4.tss-q7ywoh-MUIDataTable-paper.tss-17ud2kq-MUIDataTable-root.css-ao8rxk {
-  margin: 20px;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-  border-radius: 40px;
-  /* agregra un aimagen de back */
-}
-
 .Acciones-con {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   border: 1.3px solid var(--vinoOsc);
-  padding: 15px;
+  padding: 12px 14px;
   border-radius: 30px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(1.6px);
+  background-color: rgba(255, 255, 255, 0.78);
+  min-width: 118px;
 }
 
 /*  */
@@ -81,20 +63,32 @@
 }
 
 .crud-button {
+  background: rgba(255, 255, 255, 0.74) !important;
   border: 1px solid var(--vinoClr);
   border-radius: 30px;
-  color: var(--doradoOsc);
+  color: var(--doradoOsc) !important;
   cursor: pointer;
   margin: 3px 5px;
   padding: 5px 10px;
   transition: background .3s;
   width: 100%;
   font-weight: 700;
+  line-height: 1.25;
+  min-width: 92px;
+  text-transform: none !important;
+  box-shadow: none !important;
 }
 
 .crud-button:hover {
-  background-color: var(--vinoOsc);
+  background-color: var(--vinoOsc) !important;
+  color: var(--doradoOsc) !important;
   transform: translateX(0.30em);
+}
+
+.crud-button.MuiButton-root {
+  border-radius: 30px;
+  font-family: inherit;
+  padding: 5px 10px;
 }
 
 /* Estilos del modal */
