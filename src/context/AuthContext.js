@@ -1,0 +1,36 @@
+'use client';
+
+// AuthContext.js
+import React, { createContext, useState, useEffect } from 'react';
+import axios from '../config/axiosConfig';
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await axios.get('/api/current_user/');
+                setUser(response.data);
+                setIsAuthenticated(true);
+            } catch (error) {
+                setIsAuthenticated(false);
+            } finally {
+                setIsLoadingAuth(false);
+            }
+        };
+        fetchUser();
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ user, isAuthenticated, isLoadingAuth }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export default AuthContext;
